@@ -1,0 +1,178 @@
+/* === APP STRUCTURE, HEADER, GENERAL STYLES... === */
+/* (These styles use the variables and should work for both themes) */
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    padding: 3rem 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.App-header {
+  background: var(--header-background);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-stroke);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.App-header h1 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.App-header nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--text-bright);
+  background-color: var(--card-stroke);
+}
+
+.nav-link.active {
+    color: var(--text-bright);
+    background-color: var(--card-stroke);
+}
+
+.logout-button {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--card-stroke);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.logout-button:hover {
+  background: var(--card-stroke);
+  color: var(--text-bright);
+  border-color: var(--card-stroke);
+}
+
+/* Action Button */
+.action-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-on-accent);
+    background: var(--accent-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-button:hover {
+    background: var(--accent-glow);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 20px rgba(0, 255, 65, 0.2);
+}
+
+.action-button:disabled {
+    background-color: var(--text-secondary);
+    color: var(--text-primary);
+    cursor: not-allowed;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Error Message */
+.error-message {
+    color: #ff8f8f;
+    background: rgba(255, 59, 59, 0.1);
+    border: 1px solid rgba(255, 59, 59, 0.2);
+    padding: 0.8rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Input Group */
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--input-stroke);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    box-sizing: border-box;
+    background: var(--input-background);
+    color: var(--text-bright);
+    transition: all var(--transition-fast);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--input-stroke-focus);
+    box-shadow: 0 0 0 3px var(--accent-primary-transparent, rgba(0, 179, 45, 0.3));
+}
+
+@media (prefers-color-scheme: light) {
+    .input-group input:focus {
+        box-shadow: 0 0 0 3px rgba(0, 179, 45, 0.2);
+    }
+    .input-group input:focus + label {
+        background: var(--background);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .input-group input:focus + label {
+        background: var(--gray-800);
+    }
+}
