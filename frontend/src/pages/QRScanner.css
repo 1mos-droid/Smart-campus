@@ -1,0 +1,144 @@
+.qr-scanner-container {
+    width: 100%;
+}
+
+.qr-scanner-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.qr-scanner-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.qr-scanner-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.scanner-card {
+    background: var(--card-background);
+    border: 1px solid var(--card-stroke);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    overflow: hidden; /* Important for the scanner view */
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#qr-reader {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+#qr-reader video {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: var(--radius-md);
+}
+
+.scanning-inactive {
+    display: none;
+}
+
+.scanner-idle {
+    text-align: center;
+}
+.scanner-idle p {
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.stop-scan-button {
+    margin-top: 1.5rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--card-stroke);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.stop-scan-button:hover {
+    background: var(--card-stroke);
+    color: var(--text-bright);
+}
+
+/* Status Overlay & Modal */
+.status-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.status-modal {
+    width: 90%;
+    max-width: 400px;
+    background: var(--card-background);
+    border: 1px solid var(--card-stroke);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.status-modal h3 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: var(--text-bright);
+}
+
+.status-modal p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.status-modal .action-button {
+    width: 100%;
+}
+
+.status-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.success-icon {
+    background: rgba(0, 255, 65, 0.15);
+    color: var(--accent-glow);
+    border: 2px solid var(--accent-glow);
+}
+
+.error-icon {
+    background: rgba(255, 80, 80, 0.15);
+    color: #ff5050;
+    border: 2px solid #ff5050;
+}

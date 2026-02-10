@@ -1,0 +1,117 @@
+.timetable-container {
+    width: 100%;
+}
+
+.timetable-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.timetable-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.timetable-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.timetable-header strong {
+    color: var(--text-bright);
+}
+
+.day-section {
+    margin-bottom: 3.5rem;
+}
+
+.day-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--card-stroke);
+    color: var(--text-bright);
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.course-card {
+    background: var(--card-background);
+    border: 1px solid var(--card-stroke);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-fast);
+    backdrop-filter: blur(10px);
+}
+
+.course-card-header {
+    margin-bottom: 1.5rem;
+}
+
+.course-card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.25rem;
+}
+
+.course-card-header span {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background-color: rgba(128, 128, 128, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-md);
+}
+
+.course-card-body p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.course-card-body p:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.course-card-body strong {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.no-courses {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--card-background);
+    border: 1px solid var(--card-stroke);
+    border-radius: var(--radius-lg);
+}
+
+.no-courses p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* Simple loading spinner */
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: var(--accent-primary);
+  animation: spin 1s ease infinite;
+  margin: 4rem auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
