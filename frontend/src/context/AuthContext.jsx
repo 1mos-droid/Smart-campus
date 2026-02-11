@@ -1,57 +1,59 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios'; // For API calls
+import React, { createContext, useState, useEffect } from 'react';
+import api from '../api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // To check initial auth status
-  const [studentId, setStudentId] = useState(null);
-
-  // Base URL for backend API
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const storedStudentId = localStorage.getItem('studentId');
-    if (token && storedStudentId) {
-      // Basic check: In a real app, you'd verify the token with the backend
-      setIsAuthenticated(true);
-      setStudentId(storedStudentId);
+    if (token) {
+      const fetchUser = async () => {
+        try {
+          const res = await api.get('/auth/me');
+          setUser(res.data);
+        } catch (error) {
+          console.error('Failed to fetch user', error);
+          localStorage.removeItem('token');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUser();
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = async (id, password) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, { studentId: id, password });
+      const res = await api.post('/auth/login', { userId: id, password });
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('studentId', res.data.studentId);
-      setIsAuthenticated(true);
-      setStudentId(res.data.studentId);
-      return { success: true };
+      const userRes = await api.get('/auth/me');
+      setUser(userRes.data);
+      return { success: true, role: userRes.data.role };
     } catch (err) {
       console.error(err);
-      return { success: false, message: err.response?.data?.msg || 'Login failed' };
+      return { success: false, message: err.response?.data?.message || 'Login failed' };
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (id, email, password) => {
+  const register = async (id, email, password, name) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, { studentId: id, email, password });
-      // After registration, automatically log in the user
+      const res = await api.post('/auth/register', { studentId: id, email, password, name });
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('studentId', res.data.studentId);
-      setIsAuthenticated(true);
-      setStudentId(res.data.studentId);
-      return { success: true };
+      const userRes = await api.get('/auth/me');
+      setUser(userRes.data);
+      return { success: true, role: userRes.data.role };
     } catch (err) {
       console.error(err);
-      return { success: false, message: err.response?.data?.msg || 'Registration failed' };
+      return { success: false, message: err.response?.data?.message || 'Registration failed' };
     } finally {
       setLoading(false);
     }
@@ -59,14 +61,12 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('studentId');
-    setIsAuthenticated(false);
-    setStudentId(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, studentId, loading, login, register, logout, API_URL }}>
-      {children}
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, loading, login, register, logout }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

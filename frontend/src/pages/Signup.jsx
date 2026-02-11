@@ -6,6 +6,7 @@ import './Login.css'; // Re-using login styles
 
 const Signup = () => {
   const [studentId, setStudentId] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +16,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!studentId || !email || !password) {
+    if (!studentId || !email || !password || !name) {
       setError('Please fill in all fields.');
       return;
     }
@@ -24,9 +25,13 @@ const Signup = () => {
         setError('Please enter a valid email address.');
         return;
     }
-    const result = await register(studentId, email, password);
+    const result = await register(studentId, email, password, name);
     if (result.success) {
-      navigate('/');
+      if (result.role === 'lecturer') {
+        navigate('/dashboard');
+      } else {
+        navigate('/');
+      }
     } else {
       setError(result.message || 'Failed to sign up. Please try again.');
     }
@@ -54,6 +59,17 @@ const Signup = () => {
               onChange={(e) => setStudentId(e.target.value)}
               required
               placeholder="e.g., 109xxxx"
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="name">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="e.g., John Doe"
             />
           </div>
           <div className="input-group">

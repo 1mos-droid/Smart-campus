@@ -5,10 +5,11 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Timetable from './pages/Timetable';
 import QRScanner from './pages/QRScanner';
+import Dashboard from './pages/Dashboard';
 import Logo from './components/Logo';
 import AuthContext from './context/AuthContext';
-import './index.css'; // Global styles
-import './App.css'; // App-specific styles
+import './index.css';
+import './App.css';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -34,22 +35,34 @@ const PageWrapper = ({ children }) => (
   </motion.div>
 );
 
-function PrivateRoute({ children }) {
-  const { isAuthenticated } = React.useContext(AuthContext);
+function PrivateRoute({ children, allowedRoles }) {
+  const { isAuthenticated, user, loading } = React.useContext(AuthContext);
   const location = useLocation();
+
+  if (loading) {
+    return <div className="loading-spinner"></div>;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
+
+  if (allowedRoles && !allowedRoles.includes(user?.role)) {
+    return <Navigate to="/" replace />;
+  }
+
   return children;
 }
 
 function AppContent() {
-  const { isAuthenticated, logout } = React.useContext(AuthContext);
+  const { isAuthenticated, logout, user } = React.useContext(AuthContext);
   const location = useLocation();
+
+  const defaultPath = user?.role === 'lecturer' ? '/dashboard' : '/';
 
   return (
     <div className="App">
-      <Header isAuthenticated={isAuthenticated} handleLogout={logout} />
+      <Header isAuthenticated={isAuthenticated} handleLogout={logout} user={user} />
       <main>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -58,8 +71,16 @@ function AppContent() {
             <Route
               path="/scan"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={['student']}>
                   <PageWrapper><QRScanner /></PageWrapper>
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute allowedRoles={['lecturer']}>
+                  <PageWrapper><Dashboard /></PageWrapper>
                 </PrivateRoute>
               }
             />
@@ -67,7 +88,7 @@ function AppContent() {
               path="/"
               element={
                 <PrivateRoute>
-                  <PageWrapper><Timetable /></PageWrapper>
+                  {user?.role === 'lecturer' ? <Navigate to="/dashboard" /> : <PageWrapper><Timetable /></PageWrapper>}
                 </PrivateRoute>
               }
             />
@@ -78,7 +99,7 @@ function AppContent() {
   );
 }
 
-function Header({ isAuthenticated, handleLogout }) {
+function Header({ isAuthenticated, handleLogout, user }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -102,8 +123,15 @@ function Header({ isAuthenticated, handleLogout }) {
         <AnimatePresence>
         {isAuthenticated ? (
           <>
-            <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Timetable</Link>
-            <Link to="/scan" className={`nav-link ${location.pathname === '/scan' ? 'active' : ''}`}>Scan QR</Link>
+            {user?.role === 'student' && (
+              <>
+                <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Timetable</Link>
+                <Link to="/scan" className={`nav-link ${location.pathname === '/scan' ? 'active' : ''}`}>Scan QR</Link>
+              </>
+            )}
+            {user?.role === 'lecturer' && (
+              <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>Dashboard</Link>
+            )}
             <motion.button
               onClick={handleLogoutClick}
               className="logout-button"

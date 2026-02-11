@@ -21,7 +21,7 @@ const QRScanner = () => {
     const scannerRef = useRef(null);
 
     useEffect(() => {
-        if (isScanning) {
+        if (isScanning && !scannerRef.current) {
             const scanner = new Html5QrcodeScanner(
                 'qr-reader',
                 {
@@ -31,10 +31,12 @@ const QRScanner = () => {
                 },
                 false // verbose
             );
-            scannerRef.current = scanner;
 
             const onScanSuccess = (decodedText, decodedResult) => {
-                scanner.clear();
+                if (scannerRef.current) {
+                    scannerRef.current.clear();
+                    scannerRef.current = null;
+                }
                 setIsScanning(false);
                 setScanResult(decodedText);
                 handleAttendanceMarking(decodedText);
@@ -45,14 +47,17 @@ const QRScanner = () => {
             };
 
             scanner.render(onScanSuccess, onScanFailure);
+            scannerRef.current = scanner;
         }
+    }, [isScanning]);
 
+    useEffect(() => {
         return () => {
             if (scannerRef.current) {
                 scannerRef.current.clear().catch(err => console.error("Scanner clear failed", err));
             }
         };
-    }, [isScanning]);
+    }, []);
 
     const handleAttendanceMarking = (qrCodeData) => {
         setStatus({ loading: true, error: null, success: null });

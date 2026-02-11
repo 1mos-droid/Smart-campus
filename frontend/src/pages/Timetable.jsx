@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import api from '../api'; // Using the new api helper
+import api from '../api';
 import AuthContext from '../context/AuthContext';
 import './Timetable.css';
 
@@ -8,7 +8,7 @@ const Timetable = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { studentId } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -24,12 +24,15 @@ const Timetable = () => {
       }
     };
 
-    fetchCourses();
-  }, []);
+    if (user) {
+      fetchCourses();
+    }
+  }, [user]);
 
   const groupCoursesByDay = (courses) => {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const grouped = courses.reduce((acc, course) => {
+      if (!course.schedule || !course.schedule.day) return acc;
       const day = course.schedule.day;
       if (!acc[day]) {
         acc[day] = [];
@@ -66,7 +69,7 @@ const Timetable = () => {
     <div className="timetable-container">
       <header className="timetable-header">
         <h1>My Timetable</h1>
-        <p>Welcome, Student <strong>{studentId}</strong></p>
+        <p>Welcome, <strong>{user?.name || user?.studentId}</strong></p>
       </header>
 
       <AnimatePresence>
